@@ -1,0 +1,37 @@
+h1 {
+    padding: 0.5%;
+}
+
+.horizontalRuler {
+    background-color: #000000;
+    height: 1px;
+    width: 100%;
+}
+
+.one-third-height {
+    height: 33%;
+}
+
+label {
+    font-size: 1.8vw;
+    font-weight: 500;
+}
+
+.bordered-div {
+    border: 1px solid black; 
+    cursor: pointer;
+    height: 30vh;
+}
+
+.moneyBtn {
+    width: 20vw;
+}
+
+.input_position {
+    width: 50%;
+    margin: auto;
+}
+
+.row-height {
+    height: 28%;
+}
