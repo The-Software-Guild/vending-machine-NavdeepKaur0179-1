@@ -9,7 +9,7 @@ h1 {
 }
 
 .one-third-height {
-    height: 33%;
+    height: 33vh;
 }
 
 label {
@@ -18,7 +18,7 @@ label {
 }
 
 .bordered-div {
-    border: 1px solid black; 
+    border: 1px solid black;
     cursor: pointer;
     height: 30vh;
 }

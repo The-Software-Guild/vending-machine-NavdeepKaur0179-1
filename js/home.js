@@ -1,5 +1,6 @@
 const base_url = config.BASE_URL;
 var prevDiv = -1;
+var firstId;
 var currentDivSelected;
 var quarters, nickels, pennies;
 $(document).ready(function () {
@@ -54,6 +55,7 @@ function getItems() {
                     console.log(items);
                     var currentItemCount = 0;
                     var itemsRow = '<div class="row">';
+                    firstId=items[0].id;
                     for (let loopCounter = 0; loopCounter < items.length; loopCounter++) {
                         if (loopCounter % 3 == 0) {
                             $('#itemsList').append(itemsRow);
@@ -78,7 +80,7 @@ function getItems() {
 function selectItem(id) {
     currentDivSelected = id;
     $('#itemId').val(id);
-    if (prevDiv >= 1 && prevDiv != id) {
+    if (prevDiv >= firstId && prevDiv != id) {
         var prevDivId = "#" + prevDiv;
         $(prevDivId).css({ "backgroundColor": "white" });
 
@@ -105,7 +107,7 @@ function makePurchase(itemId, money) {
             totalChange = totalChange + quarters * 0.25;
             totalChange = totalChange + dimes * 0.10;
             totalChange = totalChange + nickels * 0.05;
-            totalChange = totalChange + pennies;
+            totalChange = totalChange + pennies*0.01;
             $("#moneyInput").val(totalChange);
             var currQuantity = "#quantity" + itemId;
             var currentQuantityText = $(currQuantity).text();
@@ -134,14 +136,16 @@ function returnChange() {
         totalChange = totalChange + quarters + " Quaters"
     }
     if (dimes > 0) {
-        totalChange = totalChange + dimes + " ,Dimes"
+        totalChange = totalChange +","+ dimes + " Dimes"
     }
     if (nickels > 0) {
-        totalChange = totalChange + nickels + " ,Nickels"
+        totalChange = totalChange +","+nickels + " Nickels"
     }
     if (pennies > 0) {
-        totalChange = totalChange + pennies + " ,Pennies"
+        totalChange = totalChange + ","+pennies + " Pennies"
     }
     $("#changeMessage").val(totalChange + ".");
     $("#moneyInput").val("");
+    $("#message").val("");
+    removeSelection(prevDiv);
 }
