@@ -2,8 +2,9 @@ const base_url = config.BASE_URL;
 var prevDiv = -1;
 var firstId;
 var currentDivSelected;
+var changeLeft;
 $(document).ready(function () {
-    //alert("ready");
+    $("#moneyInput").val("0.00");
     getItems();
     let totalAmount = 0;
     let moneyInputField = $("#moneyInput");
@@ -42,7 +43,7 @@ $(document).ready(function () {
     //     removeSelection(currentDivSelected);
     // }) ;
     $('#changeBtn').click(function () {
-        returnChange();
+        $("#changeMessage").val("");
     });
 });
 
@@ -107,7 +108,8 @@ function makePurchase(itemId, money) {
             totalChange = totalChange + change.dimes * 0.10;
             totalChange = totalChange + change.nickels * 0.05;
             totalChange = totalChange + change.pennies * 0.01;
-            $("#moneyInput").val(totalChange);
+            changeLeft=totalChange;
+            $("#moneyInput").val("0.00");
             var currQuantity = "#quantity" + itemId;
             var currentQuantityText = $(currQuantity).text();
             var currentItemCount = Number(currentQuantityText);
@@ -115,6 +117,7 @@ function makePurchase(itemId, money) {
             $(currQuantity).html(currentItemCount);
             $("#message").val("Thank You!!");
             removeSelection();
+            returnChange();
         },
         error: function (response) {
             $("#message").val(response.responseJSON.message);
@@ -127,10 +130,9 @@ function removeSelection(itemId) {
 }
 
 function returnChange() {
-    var quarters,dimes,nickels,pennies;
-    var moneyToReturn=$("#moneyInput").val();
-    var dollars=Math.floor(moneyToReturn);
-    var remainingMoney=moneyToReturn-dollars;
+    var quarters,dimes,nickels,pennies;   
+    var dollars=Math.floor(changeLeft);
+    var remainingMoney=changeLeft-dollars;
   
     var totalPennies=dollars*100+remainingMoney*100;
     
@@ -163,7 +165,7 @@ function returnChange() {
         totalChange = totalChange + "," + pennies + " Pennies"
     }
     $("#changeMessage").val(totalChange + ".");
-    $("#moneyInput").val("");
+    $("#moneyInput").val("0.00");
     $("#message").val("");
     removeSelection(prevDiv);
 }
