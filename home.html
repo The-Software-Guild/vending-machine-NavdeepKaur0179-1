@@ -17,7 +17,10 @@
         <h1 class="text-center">Vending Machine</h1>
         <div class="horizontalRuler"></div>
         <div class="row">
-            <div id="itemsList" class="col-md-8 overflow-auto" style="overflow-y:scroll; max-height: 100vh;"></div>
+            <div id="itemsList" class="col-md-8 overflow-auto mt-1" style="overflow-y:scroll; max-height: 100vh;">
+                <div class="row" id="itemsRow"> </div>
+            </div>
+
             <div id="moneyDetail" class="col-md-4">
                 <div class="one-third-height">
                     <form id="moneyForm " class="mx-auto text-center">
@@ -25,10 +28,14 @@
                             <label for="moneyInput ">Total $ In</label><br>
                             <input type="number" min="0" value="0" step="any" class="form-control input_position" id="moneyInput">
                         </div>
-                        <button class="m-1 " type="button " class="btn btn-secondary moneyBtn" id="addDollarBtn">Add Dollar</button>
-                        <button class="m-1 " type="button " class="btn btn-secondary moneyBtn" id="addQuaterBtn">Add Quater</button><br>
-                        <button class="m-1 " type="button " class="btn btn-secondary moneyBtn" id="addDimeBtn">Add Dime</button>
-                        <button class="m-1 " type="button " class="btn btn-secondary moneyBtn" id="addNickelBtn">Add Nickel</button>
+                        <button type="button " class="btn btn-outline-primary mb-1 col-sm-4" id="addDollarBtn">Add
+                            Dollar</button>
+                        <button type="button " class="btn btn-outline-primary  mb-1  col-sm-4" id="addQuaterBtn">Add
+                            Quater</button><br>
+                        <button type="button " class="btn btn-outline-primary  mb-1  col-sm-4" id="addDimeBtn">Add
+                            Dime</button>
+                        <button type="button " class="btn btn-outline-primary  mb-1  col-sm-4" id="addNickelBtn">Add
+                            Nickel</button>
                     </form>
                 </div>
                 <div class="horizontalRuler "></div>
@@ -43,7 +50,8 @@
                             <label class="col p-0" for="itemId ">Item</label>
                             <input class="col form-control" type="number" id="itemId">
                         </div>
-                        <button class="m-1 " type="button" class="btn btn-secondary" id="makePurchaseBtn">Make Purchase</button>
+                        <button type="button" class="btn btn-outline-primary  mb-1  col-sm-6" id="makePurchaseBtn">Make
+                            Purchase</button>
                     </form>
                 </div>
                 <div class="horizontalRuler "></div>
@@ -52,12 +60,24 @@
                     <form id="ChangeForm " class="mx-auto text-center">
                         <div class=" form-group ">
                             <label for="change ">Change</label><br>
-                            <input type="text"  class="form-control" id="changeMessage">
+                            <input type="text" class="form-control" id="changeMessage">
                         </div>
-                        <button class="m-1 " type="button" class="btn btn-secondary" id="changeBtn">Change Return</button>
+                        <button type="button" class="btn btn-outline-primary  mb-1  col-sm-6" id="changeBtn">Change
+                            Return</button>
 
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Template for vending machine -->
+    <div id="itemTemplate" class="col-md-4 p2 d-none">
+        <div class="card border-primary mt-2 mb-2 h-70">
+            <div id="itemNumber" class="card-header h5"></div>
+            <div class="card-body text-center">
+                <div id="itemName" class="card-title text-primary h6"></div>
+                <div id="itemPrice" class="card-text"></div><br>
+                <p>Quantity Left : <span id="itemQuantity" class="card-text"></span></p>
             </div>
         </div>
     </div>

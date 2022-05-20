@@ -2,7 +2,6 @@ const base_url = config.BASE_URL;
 var prevDiv = -1;
 var firstId;
 var currentDivSelected;
-var quarters, nickels, pennies;
 $(document).ready(function () {
     //alert("ready");
     getItems();
@@ -12,22 +11,25 @@ $(document).ready(function () {
         e.preventDefault();
         totalAmount = totalAmount + 1;
         moneyInputField.val(totalAmount.toFixed(2));
+        $("#changeMessage").val("");
     });
     $("#addQuaterBtn").click(function (e) {
         e.preventDefault();
         totalAmount = totalAmount + 0.25;
         moneyInputField.val(totalAmount.toFixed(2));
-
+        $("#changeMessage").val("");
     });
     $("#addDimeBtn").click(function (e) {
         e.preventDefault();
         totalAmount = totalAmount + 0.10;
         moneyInputField.val(totalAmount.toFixed(2));
+        $("#changeMessage").val("");
     });
     $("#addNickelBtn").click(function (e) {
         e.preventDefault();
         totalAmount = totalAmount + 0.05;
         moneyInputField.val(totalAmount.toFixed(2));
+        $("#changeMessage").val("");
     });
     $('#makePurchaseBtn').click(function (e) {
         makePurchase($('#itemId').val(), $('#moneyInput').val());
@@ -44,6 +46,7 @@ $(document).ready(function () {
     });
 });
 
+//This metho is to display list of all items 
 function getItems() {
     let getItemsUrl = base_url + "items";
     $.ajax(
@@ -55,20 +58,20 @@ function getItems() {
                     console.log(items);
                     var currentItemCount = 0;
                     var itemsRow = '<div class="row">';
-                    firstId=items[0].id;
-                    for (let loopCounter = 0; loopCounter < items.length; loopCounter++) {
-                        if (loopCounter % 3 == 0) {
-                            $('#itemsList').append(itemsRow);
-                            itemsRow = '<div class="row">';
-                        }
-                        var itemsCol = "";
-                        itemsCol = itemsCol + '<div class="col bordered-div m-1" id="' + items[loopCounter].id + '" onclick="selectItem(' + items[loopCounter].id + ')">' + (loopCounter + 1) + '<br>';
-                        itemsCol = itemsCol + '<p class="text-center" id="name' + items[loopCounter].id + '">' + items[loopCounter].name + '<br><br>';
-                        itemsCol = itemsCol + '<span id="price' + items[loopCounter].id + '">$' + items[loopCounter].price + '</span><br><br>';
-                        itemsCol = itemsCol + 'Quantity Left:<span id="quantity' + items[loopCounter].id + '">' + items[loopCounter].quantity + '</span>';
-                        itemsCol = itemsCol + '</p></div>';
-                        itemsRow = itemsRow + itemsCol;
-                    }
+                    firstId = items[0].id;
+                    var itemRow=$("#itemsRow");
+                    $.each(items,function(index,item){
+                        var displayItem=$("#itemTemplate").clone();
+                        displayItem.attr("id",item.id);
+                        displayItem.removeClass("d-none");            
+                        displayItem.find("#itemNumber").text(item.id);
+                        displayItem.attr("onclick","selectItem(" + item.id + ")");
+                        displayItem.find("#itemName").text(item.name);
+                        displayItem.find("#itemPrice").text("$"+item.price.toFixed(2))
+                        displayItem.find("#itemQuantity").text(item.quantity);
+                        displayItem.find("#itemQuantity").attr("id","quantity"+item.id);
+                        itemRow.append(displayItem);
+                    });  
                 },
             error:
                 function () {
@@ -78,12 +81,12 @@ function getItems() {
 }
 
 function selectItem(id) {
+    $("#changeMessage").val("");
     currentDivSelected = id;
     $('#itemId').val(id);
     if (prevDiv >= firstId && prevDiv != id) {
         var prevDivId = "#" + prevDiv;
         $(prevDivId).css({ "backgroundColor": "white" });
-
     }
     var currentDiv = "#" + id;
     $(currentDiv).css({ "backgroundColor": "lightblue" });
@@ -91,33 +94,27 @@ function selectItem(id) {
     $("#message").val("");
 }
 
+//This method is used to make purchase of an item selected
 function makePurchase(itemId, money) {
     let purchaseItemUrl = base_url + "money/" + money + "/item/" + itemId;
-    alert(purchaseItemUrl);
     $.ajax({
         type: "POST",
         url: purchaseItemUrl,
         async: false,
-        success: function (change) {
-            quarters = change.quarters;
-            dimes = change.dimes;
-            nickels = change.nickels;
-            pennies = change.pennies;
+        success: function (change) {            
             let totalChange = 0;
-            totalChange = totalChange + quarters * 0.25;
-            totalChange = totalChange + dimes * 0.10;
-            totalChange = totalChange + nickels * 0.05;
-            totalChange = totalChange + pennies*0.01;
+            totalChange = totalChange + change.quarters * 0.25;
+            totalChange = totalChange + change.dimes * 0.10;
+            totalChange = totalChange + change.nickels * 0.05;
+            totalChange = totalChange + change.pennies * 0.01;
             $("#moneyInput").val(totalChange);
             var currQuantity = "#quantity" + itemId;
             var currentQuantityText = $(currQuantity).text();
             var currentItemCount = Number(currentQuantityText);
             currentItemCount--;
             $(currQuantity).html(currentItemCount);
-            console.log(totalChange);
             $("#message").val("Thank You!!");
             removeSelection();
-
         },
         error: function (response) {
             $("#message").val(response.responseJSON.message);
@@ -130,19 +127,40 @@ function removeSelection(itemId) {
 }
 
 function returnChange() {
+    var quarters,dimes,nickels,pennies;
+    var moneyToReturn=$("#moneyInput").val();
+    var dollars=Math.floor(moneyToReturn);
+    var remainingMoney=moneyToReturn-dollars;
+  
+    var totalPennies=dollars*100+remainingMoney*100;
+    
+    //calculate quarters and update pennies
+    quarters=Math.floor(totalPennies/25);
+    totalPennies=totalPennies-quarters*25;
+
+    //calculate dimes and update pennies
+    dimes=Math.floor(totalPennies/10);
+    totalPennies=totalPennies-dimes*10;
+
+    //calculate nickels and update pennies
+    nickels=Math.floor(totalPennies/5);
+    totalPennies=totalPennies-nickels*5;
+
+    //remaining pennies
+    pennies=totalPennies;
 
     var totalChange = "";
     if (quarters > 0) {
         totalChange = totalChange + quarters + " Quaters"
     }
     if (dimes > 0) {
-        totalChange = totalChange +","+ dimes + " Dimes"
+        totalChange = totalChange + "," + dimes + " Dimes"
     }
     if (nickels > 0) {
-        totalChange = totalChange +","+nickels + " Nickels"
+        totalChange = totalChange + "," + nickels + " Nickels"
     }
     if (pennies > 0) {
-        totalChange = totalChange + ","+pennies + " Pennies"
+        totalChange = totalChange + "," + pennies + " Pennies"
     }
     $("#changeMessage").val(totalChange + ".");
     $("#moneyInput").val("");
