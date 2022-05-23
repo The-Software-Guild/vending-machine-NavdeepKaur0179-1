@@ -10,24 +10,28 @@ $(document).ready(function () {
     let moneyInputField = $("#moneyInput");
     $("#addDollarBtn").click(function (e) {
         e.preventDefault();
+        $("#changeMessage").val("");
         totalAmount = totalAmount + 1;
         moneyInputField.val(totalAmount.toFixed(2));
         $("#changeMessage").val("");
     });
     $("#addQuaterBtn").click(function (e) {
         e.preventDefault();
+        $("#changeMessage").val("");
         totalAmount = totalAmount + 0.25;
         moneyInputField.val(totalAmount.toFixed(2));
         $("#changeMessage").val("");
     });
     $("#addDimeBtn").click(function (e) {
         e.preventDefault();
+        $("#changeMessage").val("");
         totalAmount = totalAmount + 0.10;
         moneyInputField.val(totalAmount.toFixed(2));
         $("#changeMessage").val("");
     });
     $("#addNickelBtn").click(function (e) {
         e.preventDefault();
+        $("#changeMessage").val("");
         totalAmount = totalAmount + 0.05;
         moneyInputField.val(totalAmount.toFixed(2));
         $("#changeMessage").val("");
@@ -44,7 +48,12 @@ $(document).ready(function () {
     // }) ;
     $('#changeBtn').click(function () {
         returnChange();
-        $("#changeMessage").val("");
+        if(changeLeft>0)
+        {
+            $("#changeMessage").val("");
+        }       
+        totalAmount=0.00;
+        changeLeft=0.00;
     });
 });
 
@@ -83,7 +92,7 @@ function getItems() {
 }
 
 function selectItem(id) {
-    $("#changeMessage").val("");
+    $("#changeMessage").val("");    
     currentDivSelected = id;
     $('#itemId').val(id);
     if (prevDiv >= firstId && prevDiv != id) {
@@ -166,17 +175,15 @@ function returnChange() {
         totalChange = totalChange + quarters + " Quaters"
     }
     if (dimes > 0) {
-        totalChange = totalChange + "," + dimes + " Dimes"
+        totalChange = totalChange + " " + dimes + " Dimes"
     }
     if (nickels > 0) {
-        totalChange = totalChange + "," + nickels + " Nickels"
+        totalChange = totalChange + " " + nickels + " Nickels"
     }
     if (pennies > 0) {
-        totalChange = totalChange + "," + pennies + " Pennies"
+        totalChange = totalChange + " " + pennies + " Pennies"
     }
     $("#changeMessage").val(totalChange + ".");
-    totalAmount=0.00;
-    changeLeft=0.00;
     $("#moneyInput").val("0.00");
     $("#message").val("");
     removeSelection(prevDiv);
