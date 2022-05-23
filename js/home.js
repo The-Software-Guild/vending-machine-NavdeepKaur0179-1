@@ -3,10 +3,10 @@ var prevDiv = -1;
 var firstId;
 var currentDivSelected;
 var changeLeft;
+let totalAmount = 0.00;
 $(document).ready(function () {
     $("#moneyInput").val("0.00");
     getItems();
-    let totalAmount = 0;
     let moneyInputField = $("#moneyInput");
     $("#addDollarBtn").click(function (e) {
         e.preventDefault();
@@ -43,6 +43,7 @@ $(document).ready(function () {
     //     removeSelection(currentDivSelected);
     // }) ;
     $('#changeBtn').click(function () {
+        returnChange();
         $("#changeMessage").val("");
     });
 });
@@ -130,9 +131,18 @@ function removeSelection(itemId) {
 }
 
 function returnChange() {
-    var quarters,dimes,nickels,pennies;   
-    var dollars=Math.floor(changeLeft);
-    var remainingMoney=changeLeft-dollars;
+    var quarters,dimes,nickels,pennies;  
+    if(changeLeft>0)
+    { 
+        var dollars=Math.floor(changeLeft);
+        var remainingMoney=changeLeft-dollars;
+    }
+    else
+    {
+        var userMoney=$("#moneyInput").val();
+        var dollars=Math.floor(userMoney );
+        var remainingMoney=userMoney-dollars;   
+    }
   
     var totalPennies=dollars*100+remainingMoney*100;
     
@@ -165,6 +175,8 @@ function returnChange() {
         totalChange = totalChange + "," + pennies + " Pennies"
     }
     $("#changeMessage").val(totalChange + ".");
+    totalAmount=0.00;
+    changeLeft=0.00;
     $("#moneyInput").val("0.00");
     $("#message").val("");
     removeSelection(prevDiv);
